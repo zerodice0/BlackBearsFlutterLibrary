@@ -1,4 +1,4 @@
-import 'package:blackbear_flutter_library/shared_preferences_helper_example/shared_preferences_helper_example.dart.dart';
+import 'package:blackbear_flutter_library/shared_preferences_helper_example/shared_preferences_helper_example.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {

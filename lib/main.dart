@@ -7,7 +7,7 @@ void main(List<String> args) {
 }
 
 class BlackBearFlutterLibraryExample extends StatelessWidget {
-  const BlackBearFlutterLibraryExample({Key key}) : super(key: key);
+  const BlackBearFlutterLibraryExample() : super();
 
   @override
   Widget build(BuildContext context) {

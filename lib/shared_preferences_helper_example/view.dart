@@ -9,7 +9,7 @@ class SharedPreferencesHelperExample extends StatelessWidget {
       TextEditingController();
 
   SharedPreferencesHelperExample() {
-    sharedPreferencesHello.fetch().then((value) {
+    sharedPreferencesHello.fetch("Hello").then((value) {
       textEditingControllerHello.text = value;
     });
   }

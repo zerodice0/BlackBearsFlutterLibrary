@@ -25,26 +25,25 @@ class _SharedPreferenceHelperWrapper {
     return (T value, {SharedPreferences? sharedPreferences}) async {
       bool result = false;
 
-      if (sharedPreferences == null) {
-        sharedPreferences = await SharedPreferences.getInstance();
-      }
+      SharedPreferences _sharedPreferences =
+          sharedPreferences ?? await SharedPreferences.getInstance();
 
       switch (T) {
         case String:
-          result = await sharedPreferences.setString(key, value as String);
+          result = await _sharedPreferences.setString(key, value as String);
           break;
         case bool:
-          result = await sharedPreferences.setBool(key, value as bool);
+          result = await _sharedPreferences.setBool(key, value as bool);
           break;
         case double:
-          result = await sharedPreferences.setDouble(key, value as double);
+          result = await _sharedPreferences.setDouble(key, value as double);
           break;
         case int:
-          result = await sharedPreferences.setInt(key, value as int);
+          result = await _sharedPreferences.setInt(key, value as int);
           break;
         case _StringList:
           result =
-              await sharedPreferences.setStringList(key, value as _StringList);
+              await _sharedPreferences.setStringList(key, value as _StringList);
           break;
         default:
           break;
@@ -58,28 +57,27 @@ class _SharedPreferenceHelperWrapper {
     return (T defaultValue, {SharedPreferences? sharedPreferences}) async {
       T result = defaultValue;
 
-      if (sharedPreferences == null) {
-        sharedPreferences = await SharedPreferences.getInstance();
-      }
+      SharedPreferences _sharedPreferences =
+          await SharedPreferences.getInstance();
 
       switch (T) {
         case String:
-          result = (sharedPreferences.getString(key) ?? defaultValue) as T;
+          result = (_sharedPreferences.getString(key) ?? defaultValue) as T;
           break;
         case bool:
-          result = (sharedPreferences.getBool(key) ?? defaultValue) as T;
+          result = (_sharedPreferences.getBool(key) ?? defaultValue) as T;
           break;
         case double:
-          result = (sharedPreferences.getDouble(key) ?? defaultValue) as T;
+          result = (_sharedPreferences.getDouble(key) ?? defaultValue) as T;
           break;
         case int:
-          result = (sharedPreferences.getInt(key) ?? defaultValue) as T;
+          result = (_sharedPreferences.getInt(key) ?? defaultValue) as T;
           break;
         case List:
-          result = (sharedPreferences.getStringList(key) ?? defaultValue) as T;
+          result = (_sharedPreferences.getStringList(key) ?? defaultValue) as T;
           break;
         default:
-          result = (sharedPreferences.get(key) ?? defaultValue) as T;
+          result = (_sharedPreferences.get(key) ?? defaultValue) as T;
           break;
       }
 

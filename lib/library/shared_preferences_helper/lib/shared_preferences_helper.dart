@@ -2,7 +2,7 @@ library shared_preferences_helper;
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-typedef _GeneratedFetchFunction<T> = Future<T?> Function(
+typedef _GeneratedFetchFunction<T> = Future<T> Function(T defaultValue,
     {SharedPreferences sharedPreferences});
 typedef _GeneratedUpdateFunction<T> = Future<bool> Function(T value,
     {SharedPreferences sharedPreferences});
@@ -54,9 +54,9 @@ class _SharedPreferenceHelperWrapper {
     };
   }
 
-  static _GeneratedFetchFunction<T?> fetchGenerator<T>(String key) {
-    return ({SharedPreferences? sharedPreferences}) async {
-      T? result;
+  static _GeneratedFetchFunction<T> fetchGenerator<T>(String key) {
+    return (T defaultValue, {SharedPreferences? sharedPreferences}) async {
+      T result = defaultValue;
 
       if (sharedPreferences == null) {
         sharedPreferences = await SharedPreferences.getInstance();
@@ -64,22 +64,22 @@ class _SharedPreferenceHelperWrapper {
 
       switch (T) {
         case String:
-          result = sharedPreferences.getString(key) as T?;
+          result = (sharedPreferences.getString(key) ?? defaultValue) as T;
           break;
         case bool:
-          result = sharedPreferences.getBool(key) as T?;
+          result = (sharedPreferences.getBool(key) ?? defaultValue) as T;
           break;
         case double:
-          result = sharedPreferences.getDouble(key) as T?;
+          result = (sharedPreferences.getDouble(key) ?? defaultValue) as T;
           break;
         case int:
-          result = sharedPreferences.getInt(key) as T?;
+          result = (sharedPreferences.getInt(key) ?? defaultValue) as T;
           break;
         case List:
-          result = sharedPreferences.getStringList(key) as T?;
+          result = (sharedPreferences.getStringList(key) ?? defaultValue) as T;
           break;
         default:
-          result = sharedPreferences.get(key) as T?;
+          result = (sharedPreferences.get(key) ?? defaultValue) as T;
           break;
       }
 
@@ -93,7 +93,8 @@ class SharedPreferencesHelper<T> extends _SharedPreferenceHelperWrapper {
 
   SharedPreferencesHelper(this.key);
 
-  Future<T?> fetch() => _SharedPreferenceHelperWrapper.fetchGenerator<T>(key)();
+  Future<T> fetch(T defaultValue) =>
+      _SharedPreferenceHelperWrapper.fetchGenerator<T>(key)(defaultValue);
   Future<bool> update(T value) =>
       _SharedPreferenceHelperWrapper.updateGenerator<T>(key)(value);
   Future<bool> remove() =>

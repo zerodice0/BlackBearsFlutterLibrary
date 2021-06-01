@@ -1,3 +1,6 @@
+## 0.0.3
+* Fixed bug with List<String> type checking in fetch function.
+
 ## 0.0.2
 * update example
 

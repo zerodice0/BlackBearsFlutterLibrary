@@ -1,6 +1,6 @@
 name: shared_preferences_helper
 description: this package is made for using easily shared_preferences pacakge. if you make SharedPreferencesHelper object with key, you don't need to care about key when fetching, updating, removing. :).
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/zerodice0/BlackBearsFlutterLibrary
 
 environment:

@@ -1,7 +1,7 @@
 name: shared_preferences_helper
-description: A new Flutter package project.
+description: this package is made for using easily shared_preferences pacakge. if you make SharedPreferencesHelper object with key, you don't need to care about key when fetching, updating, removing. :).
 version: 0.0.1
-homepage:
+homepage: https://github.com/zerodice0/BlackBearsFlutterLibrary
 
 environment:
   sdk: ">=2.13.0 <3.0.0"
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.0.6
+  shared_preferences: ^2.0.0
 
 dev_dependencies:
   flutter_test:

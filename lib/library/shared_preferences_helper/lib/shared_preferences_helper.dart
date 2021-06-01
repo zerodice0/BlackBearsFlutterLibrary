@@ -73,7 +73,7 @@ class _SharedPreferenceHelperWrapper {
         case int:
           result = (_sharedPreferences.getInt(key) ?? defaultValue) as T;
           break;
-        case List:
+        case _StringList:
           result = (_sharedPreferences.getStringList(key) ?? defaultValue) as T;
           break;
         default:

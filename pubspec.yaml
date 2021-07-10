@@ -26,6 +26,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   shared_preferences_helper:
     path: ./lib/library/shared_preferences_helper
+  daum_postcode_search:
+    path: ./lib/library/daum_postcode_search
 
 dev_dependencies:
   flutter_test:

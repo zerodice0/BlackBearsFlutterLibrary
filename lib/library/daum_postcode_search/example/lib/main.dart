@@ -1,3 +1,4 @@
+import 'package:daum_postcode_search/daum_postcode_search.dart';
 import 'package:example/searching_page.dart';
 import 'package:flutter/material.dart';
 
@@ -43,12 +44,14 @@ class _DaumPostcodeSearchExampleState extends State<DaumPostcodeSearchExample> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.of(context).push(
+                onPressed: () async {
+                  DataModel result = await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => SearchingPage(),
                     ),
                   );
+
+                  print(result);
                 },
                 icon: Icon(Icons.search),
                 label: Text("주소 검색"),

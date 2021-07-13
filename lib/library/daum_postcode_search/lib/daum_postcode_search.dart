@@ -33,11 +33,12 @@ class _DaumPostcodeSearchState extends State<DaumPostcodeSearch> {
   @override
   Widget build(BuildContext context) {
     return InAppWebView(
-      initialUrlRequest: URLRequest(
-        url: Uri.parse(
-          "http://localhost:8080/daum_postcode_search/assets/html/address_search.html",
-        ),
-      ),
+      initialFile: "packages/daum_postcode_search/lib/assets/daum_search.html",
+      // initialUrlRequest: URLRequest(
+      //   url: Uri.parse(
+      //     "http://localhost:8080/assets/daum_search.html",
+      //   ),
+      // ),
     );
   }
 }

@@ -1,2 +1,2 @@
-export 'main.dart';
+export 'widget.dart';
 export 'data_model.dart';

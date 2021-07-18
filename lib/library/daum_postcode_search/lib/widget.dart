@@ -35,24 +35,47 @@ class DaumPostcodeSearch extends StatefulWidget {
 
   final String webPageTitle;
   final String assetPath;
-  final _DaumPostcodeSearchState state = _DaumPostcodeSearchState();
+  final _DaumPostcodeSearchState _state = _DaumPostcodeSearchState();
+
+  final void Function(InAppWebViewController controller, Uri? url,
+      int statusCode, String description)? onLoadHttpError;
+  final void Function(InAppWebViewController controller, Uri? url, int code,
+      String message)? onLoadError;
+  final void Function(InAppWebViewController controller, int progress)?
+      onProgressChanged;
+  final void Function(
+          InAppWebViewController controller, ConsoleMessage consoleMessage)?
+      onConsoleMessage;
+  final InAppWebViewGroupOptions? initialOption;
+  final Future<PermissionRequestResponse?> Function(
+      InAppWebViewController controller,
+      String origin,
+      List<String> resources)? androidOnPermissionRequest;
+
+  InAppWebViewController? get controller => this._state._controller;
 
   DaumPostcodeSearch({
     Key? key,
     this.webPageTitle = "주소 검색",
     this.assetPath =
         "packages/daum_postcode_search/lib/assets/daum_search.html",
+    this.onLoadError,
+    this.onLoadHttpError,
+    this.onProgressChanged,
+    this.androidOnPermissionRequest,
+    this.onConsoleMessage,
+    this.initialOption,
   }) : super(key: key);
 
   @override
-  _DaumPostcodeSearchState createState() => state;
+  _DaumPostcodeSearchState createState() => _state;
 }
 
 class _DaumPostcodeSearchState extends State<DaumPostcodeSearch> {
   InAppLocalhostServer localhostServer = InAppLocalhostServer();
 
-  late InAppWebViewController _controller;
-  InAppWebViewController get controller => _controller;
+  InAppWebViewController? _controller;
+  InAppWebViewController? get controller => _controller;
   int progress = 0;
   bool isServerRunning = false;
 
@@ -82,65 +105,43 @@ class _DaumPostcodeSearchState extends State<DaumPostcodeSearch> {
             "http://localhost:8080/${widget.assetPath}",
           ),
         ),
-        initialOptions: InAppWebViewGroupOptions(
-          crossPlatform: InAppWebViewOptions(
-            useShouldOverrideUrlLoading: true,
-            mediaPlaybackRequiresUserGesture: false,
-          ),
-          android: AndroidInAppWebViewOptions(
-            useHybridComposition: true,
-          ),
-          ios: IOSInAppWebViewOptions(
-            allowsInlineMediaPlayback: true,
-          ),
-        ),
-        onConsoleMessage: (controller, consoleMessage) {
-          print(consoleMessage);
-        },
-        onProgressChanged: (InAppWebViewController controller, int progress) {
-          setState(() {
-            this.progress = progress ~/ 100;
-          });
-        },
-        androidOnPermissionRequest: (InAppWebViewController controller,
-            String origin, List<String> resources) async {
-          return PermissionRequestResponse(
-              resources: resources,
-              action: PermissionRequestResponseAction.GRANT);
-        },
+        initialOptions: widget.initialOption ??
+            InAppWebViewGroupOptions(
+              crossPlatform: InAppWebViewOptions(
+                useShouldOverrideUrlLoading: true,
+                mediaPlaybackRequiresUserGesture: false,
+              ),
+              android: AndroidInAppWebViewOptions(
+                useHybridComposition: true,
+              ),
+              ios: IOSInAppWebViewOptions(
+                allowsInlineMediaPlayback: true,
+              ),
+            ),
+        androidOnPermissionRequest: widget.androidOnPermissionRequest ??
+            (InAppWebViewController controller, String origin,
+                List<String> resources) async {
+              return PermissionRequestResponse(
+                  resources: resources,
+                  action: PermissionRequestResponseAction.GRANT);
+            },
         onWebViewCreated: (InAppWebViewController webViewController) async {
           webViewController.addJavaScriptHandler(
               handlerName: 'onSelectAddress',
               callback: (args) {
-                try {
-                  Navigator.of(context).pop(
-                    DataModel.fromMap(
-                      args[0],
-                    ),
-                  );
-                } catch (error) {
-                  print(error);
-                }
+                Navigator.of(context).pop(
+                  DataModel.fromMap(
+                    args[0],
+                  ),
+                );
               });
 
           this._controller = webViewController;
         },
-        onLoadHttpError: (
-          InAppWebViewController controller,
-          Uri? url,
-          int code,
-          String message,
-        ) {
-          print(message);
-        },
-        onLoadError: (
-          InAppWebViewController controller,
-          Uri? url,
-          int code,
-          String message,
-        ) {
-          print(message);
-        },
+        onConsoleMessage: widget.onConsoleMessage,
+        onProgressChanged: widget.onProgressChanged,
+        onLoadHttpError: widget.onLoadHttpError,
+        onLoadError: widget.onLoadError,
       );
     } else {
       result = Center(

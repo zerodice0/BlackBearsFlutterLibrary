@@ -1,5 +1,4 @@
 import 'package:daum_postcode_search/daum_postcode_search.dart';
-import 'package:example/searching_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -74,7 +73,6 @@ class _DaumPostcodeSearchExampleState extends State<DaumPostcodeSearchExample> {
                         builder: (context) => SearchingPage(),
                       ),
                     );
-                    print(_daumPostcodeSearchDataModel);
 
                     setState(
                       () {
@@ -156,6 +154,20 @@ class _DaumPostcodeSearchExampleState extends State<DaumPostcodeSearchExample> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class SearchingPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    DaumPostcodeSearch daumPostcodeSearch = DaumPostcodeSearch();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("주소 검색 페이지입니다."),
+        centerTitle: true,
+      ),
+      body: daumPostcodeSearch,
     );
   }
 }

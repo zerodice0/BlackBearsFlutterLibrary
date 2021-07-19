@@ -75,7 +75,9 @@ class _SearchingPageState extends State<`SearchingPage> {
 You can access the Controller of InAppWebView by using the DaumPostcodeSearch object daumPostcodeSearch created as a variable in build, and by using this, when an error occurs, it is possible to process such as Refresh.
 
 In the example, when an error occurs, the status value _isError is set to true, and the refresh and error messages are output using Visibility.
+
 -----
+
 The example below is an example that displays the search results received using the SearchingPage written above on the screen.
 ```
 class DaumPostcodeSearchExample extends StatefulWidget {

@@ -34,8 +34,6 @@ class _DaumPostcodeSearchExampleState extends State<DaumPostcodeSearchExample> {
   @override
   void initState() {
     super.initState();
-
-    DaumPostcodeSearch.initialize();
   }
 
   @override

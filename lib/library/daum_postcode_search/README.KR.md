@@ -7,10 +7,10 @@
 
 ## 설정
 #### Android
-AndroidManifest.xml의 application에 `android:usesCleartextTraffic="true"`을 추가해주세요. [DAUM 우편번호 서비스](https://postcode.map.daum.net/guide) 내의 일부 항목이 SSL을 사용하지 않아서인지, 권한을 설정해주지 않으면 Clear text traffic 관련 에러가 발생합니다.
+AndroidManifest.xml의 `<application>`에 `android:usesCleartextTraffic="true"`을 추가해주세요. [DAUM 우편번호 서비스](https://postcode.map.daum.net/guide) 내의 일부 항목이 SSL을 사용하지 않아서인지, 권한을 설정해주지 않으면 Clear text traffic 관련 에러가 발생합니다.
 
 ## 예제
-아래는 Daum Postcode Search 패키지를 사용해서 검색 페이지를 구현한 예제엡니다.
+아래는 Daum Postcode Search 패키지를 사용해서 검색 페이지를 구현한 예제입니다.
 ```
 class SearchingPage extends StatefulWidget {
   @override

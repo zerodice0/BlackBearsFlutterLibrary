@@ -1,12 +1,15 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:marked_date_picker/types.dart';
 import 'dart:math' as math;
+
+import 'picker.dart';
 
 const Size _calendarPortraitDialogSize = Size(330.0, 518.0);
 const Size _calendarLandscapeDialogSize = Size(496.0, 346.0);
 const Size _inputPortraitDialogSize = Size(330.0, 270.0);
 const Size _inputLandscapeDialogSize = Size(496, 160.0);
-const Size _inputRangeLandscapeDialogSize = Size(496, 164.0);
 const Duration _dialogSizeAnimationDuration = Duration(milliseconds: 200);
 const double _inputFormPortraitHeight = 98.0;
 const double _inputFormLandscapeHeight = 108.0;
@@ -159,7 +162,7 @@ const double _inputFormLandscapeHeight = 108.0;
 ///
 ///  * [showDateRangePicker], which shows a material design date range picker
 ///    used to select a range of dates.
-///  * [CalendarDatePicker], which provides the calendar grid used by the date picker dialog.
+///  * [MarkedCalendarDatePicker], which provides the calendar grid used by the date picker dialog.
 ///  * [InputDatePickerFormField], which provides a text input field for entering dates.
 ///  * [showTimePicker], which shows a dialog that contains a material design time picker.
 ///
@@ -184,11 +187,11 @@ Future<DateTime?> showMarkedDatePicker({
   String? errorInvalidText,
   String? fieldHintText,
   String? fieldLabelText,
+  List<DateTime> markedDates = const <DateTime>[],
+  UpdateMonthCallback? updateMonthCallback,
+  ValueListenable<List<DateTime>>? markedDatesListenable,
+  Widget? marking,
 }) async {
-  assert(context != null);
-  assert(initialDate != null);
-  assert(firstDate != null);
-  assert(lastDate != null);
   initialDate = DateUtils.dateOnly(initialDate);
   firstDate = DateUtils.dateOnly(firstDate);
   lastDate = DateUtils.dateOnly(lastDate);
@@ -208,9 +211,7 @@ Future<DateTime?> showMarkedDatePicker({
     selectableDayPredicate == null || selectableDayPredicate(initialDate),
     'Provided initialDate $initialDate must satisfy provided selectableDayPredicate.',
   );
-  assert(initialEntryMode != null);
-  assert(useRootNavigator != null);
-  assert(initialDatePickerMode != null);
+
   assert(debugCheckHasMaterialLocalizations(context));
 
   Widget dialog = MarkedDatePickerDialog(
@@ -228,6 +229,10 @@ Future<DateTime?> showMarkedDatePicker({
     errorInvalidText: errorInvalidText,
     fieldHintText: fieldHintText,
     fieldLabelText: fieldLabelText,
+    updateMonthCallback: updateMonthCallback,
+    markedDates: markedDates,
+    markedDatesListenable: markedDatesListenable,
+    marking: marking,
   );
 
   if (textDirection != null) {
@@ -283,15 +288,14 @@ class MarkedDatePickerDialog extends StatefulWidget {
     this.fieldHintText,
     this.fieldLabelText,
     this.restorationId,
-  })  : assert(initialDate != null),
-        assert(firstDate != null),
-        assert(lastDate != null),
-        initialDate = DateUtils.dateOnly(initialDate),
+    this.markedDates = const [],
+    this.markedDatesListenable,
+    this.updateMonthCallback,
+    this.marking,
+  })  : initialDate = DateUtils.dateOnly(initialDate),
         firstDate = DateUtils.dateOnly(firstDate),
         lastDate = DateUtils.dateOnly(lastDate),
         currentDate = DateUtils.dateOnly(currentDate ?? DateTime.now()),
-        assert(initialEntryMode != null),
-        assert(initialCalendarMode != null),
         super(key: key) {
     assert(
       !this.lastDate.isBefore(this.firstDate),
@@ -311,6 +315,13 @@ class MarkedDatePickerDialog extends StatefulWidget {
       'Provided initialDate ${this.initialDate} must satisfy provided selectableDayPredicate',
     );
   }
+
+  final Widget? marking;
+  final UpdateMonthCallback? updateMonthCallback;
+
+  /// The initially marked [DateTime] that the picker display.
+  final List<DateTime> markedDates;
+  final ValueListenable<List<DateTime>>? markedDatesListenable;
 
   /// The initially selected [DateTime] that the picker should display.
   final DateTime initialDate;
@@ -517,8 +528,8 @@ class _MarkedDatePickerDialogState extends State<MarkedDatePickerDialog>
       ),
     );
 
-    CalendarDatePicker calendarDatePicker() {
-      return CalendarDatePicker(
+    MarkedCalendarDatePicker markedCalendarDatePicker() {
+      return MarkedCalendarDatePicker(
         key: _calendarPickerKey,
         initialDate: _selectedDate.value,
         firstDate: widget.firstDate,
@@ -527,13 +538,16 @@ class _MarkedDatePickerDialogState extends State<MarkedDatePickerDialog>
         onDateChanged: _handleDateChanged,
         selectableDayPredicate: widget.selectableDayPredicate,
         initialCalendarMode: widget.initialCalendarMode,
+        updateMonthCallback: widget.updateMonthCallback,
+        markedDates: widget.markedDates,
+        markedDatesListenable: widget.markedDatesListenable,
+        marking: widget.marking,
       );
     }
 
     Form inputDatePicker() {
       return Form(
         key: _formKey,
-        autovalidate: _autoValidate.value,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           height: orientation == Orientation.portrait
@@ -569,7 +583,7 @@ class _MarkedDatePickerDialogState extends State<MarkedDatePickerDialog>
     final Widget? entryModeButton;
     switch (_entryMode.value) {
       case DatePickerEntryMode.calendar:
-        picker = calendarDatePicker();
+        picker = markedCalendarDatePicker();
         entryModeButton = IconButton(
           icon: const Icon(Icons.edit),
           color: onPrimarySurface,
@@ -579,7 +593,7 @@ class _MarkedDatePickerDialogState extends State<MarkedDatePickerDialog>
         break;
 
       case DatePickerEntryMode.calendarOnly:
-        picker = calendarDatePicker();
+        picker = markedCalendarDatePicker();
         entryModeButton = null;
         break;
 

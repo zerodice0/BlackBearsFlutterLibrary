@@ -16,6 +16,10 @@ class MyApp extends StatelessWidget {
       title: 'MarkedDatePicker Example',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        colorScheme: ColorScheme.light(
+          primary: Colors.blue,
+          secondary: Colors.lightGreen[100]!,
+        ),
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -33,8 +37,22 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   DateTime date = DateTime.now();
 
+  List<DateTime> markedDates = [];
+
+  ValueNotifier<List<DateTime>> markedDatesNotifier =
+      ValueNotifier<List<DateTime>>(
+    [
+      DateTime.parse("2021-09-01"),
+      DateTime.parse("2021-09-03"),
+      DateTime.parse("2021-09-07"),
+      DateTime.parse("2021-09-29"),
+    ],
+  );
+
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -45,8 +63,29 @@ class _MyHomePageState extends State<MyHomePage> {
           DateTime? selectedDate = await showMarkedDatePicker(
             context: context,
             initialDate: date,
-            lastDate: DateTime.now(),
+            lastDate: now,
             firstDate: DateTime(2019),
+            markedDates: markedDates,
+            markedDatesListenable: markedDatesNotifier,
+            updateMonthCallback: (year, month) {
+              markedDatesNotifier.value = month % 2 == 1
+                  ? [
+                      DateTime.parse("2021-09-01"),
+                      DateTime.parse("2021-09-03"),
+                      DateTime.parse("2021-09-07"),
+                      DateTime.parse("2021-09-29"),
+                    ]
+                  : [
+                      DateTime.parse("2021-08-02"),
+                      DateTime.parse("2021-08-04"),
+                      DateTime.parse("2021-08-09"),
+                      DateTime.parse("2021-08-10"),
+                    ];
+            },
+            marking: Container(
+              color: Colors.lightGreen[100],
+              child: const Icon(Icons.check, color: Colors.white),
+            ),
           );
 
           if (selectedDate != null) {

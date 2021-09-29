@@ -91,6 +91,10 @@ class MarkedCalendarDatePicker extends StatefulWidget {
     this.markedDatesListenable,
     this.marking,
     this.updateMonthCallback,
+    this.todayColor,
+    this.markedColor,
+    this.selectedDayColor,
+    this.selectedDayBackground,
   })  : initialDate = DateUtils.dateOnly(initialDate),
         firstDate = DateUtils.dateOnly(firstDate),
         lastDate = DateUtils.dateOnly(lastDate),
@@ -119,6 +123,11 @@ class MarkedCalendarDatePicker extends StatefulWidget {
   final Widget? marking;
   final List<DateTime> markedDates;
   final ValueListenable<List<DateTime>>? markedDatesListenable;
+
+  final Color? todayColor;
+  final Color? markedColor;
+  final Color? selectedDayColor;
+  final Color? selectedDayBackground;
 
   /// The initially selected [DateTime] that the picker should display.
   final DateTime initialDate;
@@ -280,6 +289,10 @@ class _MarkedCalendarDatePickerState extends State<MarkedCalendarDatePicker> {
           markedDatesListenable: widget.markedDatesListenable,
           marking: widget.marking,
           updateMonthCallback: widget.updateMonthCallback,
+          todayColor: widget.todayColor,
+          markedColor: widget.markedColor,
+          selectedDayColor: widget.selectedDayColor,
+          selectedDayBackground: widget.selectedDayBackground,
         );
       case DatePickerMode.year:
         return Padding(
@@ -457,6 +470,10 @@ class _MonthPicker extends StatefulWidget {
     this.markedDatesListenable,
     this.updateMonthCallback,
     this.marking,
+    this.todayColor,
+    this.markedColor,
+    this.selectedDayColor,
+    this.selectedDayBackground,
   })  : assert(!firstDate.isAfter(lastDate)),
         assert(!selectedDate.isBefore(firstDate)),
         assert(!selectedDate.isAfter(lastDate)),
@@ -466,6 +483,11 @@ class _MonthPicker extends StatefulWidget {
   final Widget? marking;
   final List<DateTime> markedDates;
   final ValueListenable<List<DateTime>>? markedDatesListenable;
+
+  final Color? todayColor;
+  final Color? markedColor;
+  final Color? selectedDayColor;
+  final Color? selectedDayBackground;
 
   /// The initial month to display.
   final DateTime initialMonth;
@@ -778,6 +800,10 @@ class _MonthPickerState extends State<_MonthPicker> {
       currentDate: widget.currentDate,
       markedDates: _markedDates,
       marking: widget.marking,
+      todayColor: widget.todayColor,
+      markedColor: widget.markedColor,
+      selectedDayColor: widget.selectedDayColor,
+      selectedDayBackground: widget.selectedDayBackground,
       onChanged: _handleDateSelected,
       firstDate: widget.firstDate,
       lastDate: widget.lastDate,
@@ -908,6 +934,8 @@ class _DayPicker extends StatefulWidget {
     this.selectableDayPredicate,
     this.todayColor,
     this.markedColor,
+    this.selectedDayColor,
+    this.selectedDayBackground,
     this.markedDateShape = BoxShape.rectangle,
     this.marking,
   })  : assert(!firstDate.isAfter(lastDate)),
@@ -920,6 +948,8 @@ class _DayPicker extends StatefulWidget {
   /// color configuration.
   final Color? todayColor;
   final Color? markedColor;
+  final Color? selectedDayColor;
+  final Color? selectedDayBackground;
 
   /// This date is highlighted in the picker.
   final List<DateTime> markedDates;
@@ -1033,8 +1063,10 @@ class _DayPickerState extends State<_DayPicker> {
     final TextStyle dayStyle = textTheme.caption!;
     final Color enabledDayColor = colorScheme.onSurface.withOpacity(0.87);
     final Color disabledDayColor = colorScheme.onSurface.withOpacity(0.38);
-    final Color selectedDayColor = colorScheme.onPrimary;
-    final Color selectedDayBackground = colorScheme.primary;
+    final Color selectedDayColor =
+        widget.selectedDayColor ?? colorScheme.onPrimary;
+    final Color selectedDayBackground =
+        widget.selectedDayBackground ?? colorScheme.primary;
     final Color todayColor = widget.todayColor ?? colorScheme.primary;
     final Color markedColor = widget.markedColor ?? colorScheme.secondary;
 

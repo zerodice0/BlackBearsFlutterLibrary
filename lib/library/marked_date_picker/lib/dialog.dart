@@ -191,6 +191,10 @@ Future<DateTime?> showMarkedDatePicker({
   UpdateMonthCallback? updateMonthCallback,
   ValueListenable<List<DateTime>>? markedDatesListenable,
   Widget? marking,
+  Color? todayColor,
+  Color? markedColor,
+  Color? selectedDayColor,
+  Color? selectedDayBackground,
 }) async {
   initialDate = DateUtils.dateOnly(initialDate);
   firstDate = DateUtils.dateOnly(firstDate);
@@ -233,6 +237,10 @@ Future<DateTime?> showMarkedDatePicker({
     markedDates: markedDates,
     markedDatesListenable: markedDatesListenable,
     marking: marking,
+    todayColor: todayColor,
+    markedColor: markedColor,
+    selectedDayColor: selectedDayColor,
+    selectedDayBackground: selectedDayBackground,
   );
 
   if (textDirection != null) {
@@ -292,6 +300,10 @@ class MarkedDatePickerDialog extends StatefulWidget {
     this.markedDatesListenable,
     this.updateMonthCallback,
     this.marking,
+    this.todayColor,
+    this.markedColor,
+    this.selectedDayColor,
+    this.selectedDayBackground,
   })  : initialDate = DateUtils.dateOnly(initialDate),
         firstDate = DateUtils.dateOnly(firstDate),
         lastDate = DateUtils.dateOnly(lastDate),
@@ -315,6 +327,11 @@ class MarkedDatePickerDialog extends StatefulWidget {
       'Provided initialDate ${this.initialDate} must satisfy provided selectableDayPredicate',
     );
   }
+
+  final Color? todayColor;
+  final Color? markedColor;
+  final Color? selectedDayColor;
+  final Color? selectedDayBackground;
 
   final Widget? marking;
   final UpdateMonthCallback? updateMonthCallback;
@@ -542,6 +559,10 @@ class _MarkedDatePickerDialogState extends State<MarkedDatePickerDialog>
         markedDates: widget.markedDates,
         markedDatesListenable: widget.markedDatesListenable,
         marking: widget.marking,
+        todayColor: widget.todayColor,
+        markedColor: widget.markedColor,
+        selectedDayColor: widget.selectedDayColor,
+        selectedDayBackground: widget.selectedDayBackground,
       );
     }
 

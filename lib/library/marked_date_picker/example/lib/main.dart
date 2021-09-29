@@ -39,15 +39,39 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<DateTime> markedDates = [];
 
-  ValueNotifier<List<DateTime>> markedDatesNotifier =
-      ValueNotifier<List<DateTime>>(
-    [
-      DateTime.parse("2021-09-01"),
-      DateTime.parse("2021-09-03"),
-      DateTime.parse("2021-09-07"),
-      DateTime.parse("2021-09-29"),
-    ],
-  );
+  late ValueNotifier<List<DateTime>> markedDatesNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+
+    markedDatesNotifier = ValueNotifier<List<DateTime>>(
+      _getMarkedList(date.year, date.month),
+    );
+  }
+
+  List<DateTime> _getMarkedList(int year, int month) {
+    String prefix;
+    if (month < 10) {
+      prefix = "$year-0$month";
+    } else {
+      prefix = "$year-$month";
+    }
+    return month % 2 == 1
+        ? [
+            DateTime.parse("$prefix-01"),
+            DateTime.parse("$prefix-02"),
+            DateTime.parse("$prefix-03"),
+            DateTime.parse("$prefix-07"),
+            DateTime.parse("$prefix-29"),
+          ]
+        : [
+            DateTime.parse("$prefix-02"),
+            DateTime.parse("$prefix-04"),
+            DateTime.parse("$prefix-09"),
+            DateTime.parse("$prefix-10"),
+          ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,44 +82,65 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-          child: ElevatedButton(
-        onPressed: () async {
-          DateTime? selectedDate = await showMarkedDatePicker(
-            context: context,
-            initialDate: date,
-            lastDate: now,
-            firstDate: DateTime(2019),
-            markedDates: markedDates,
-            markedDatesListenable: markedDatesNotifier,
-            updateMonthCallback: (year, month) {
-              markedDatesNotifier.value = month % 2 == 1
-                  ? [
-                      DateTime.parse("2021-09-01"),
-                      DateTime.parse("2021-09-03"),
-                      DateTime.parse("2021-09-07"),
-                      DateTime.parse("2021-09-29"),
-                    ]
-                  : [
-                      DateTime.parse("2021-08-02"),
-                      DateTime.parse("2021-08-04"),
-                      DateTime.parse("2021-08-09"),
-                      DateTime.parse("2021-08-10"),
-                    ];
-            },
-            marking: Container(
-              color: Colors.lightGreen[100],
-              child: const Icon(Icons.check, color: Colors.white),
-            ),
-          );
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(DateFormat("yyyy-MM-dd").format(date)),
+            ElevatedButton(
+              onPressed: () async {
+                DateTime? selectedDate = await showMarkedDatePicker(
+                  context: context,
+                  initialDate: date,
+                  lastDate: now,
+                  firstDate: DateTime(2019),
+                  markedDates: markedDates,
+                  markedDatesListenable: markedDatesNotifier,
+                  updateMonthCallback: (year, month) {
+                    markedDatesNotifier.value = _getMarkedList(year, month);
+                  },
+                );
 
-          if (selectedDate != null) {
-            setState(() {
-              date = selectedDate;
-            });
-          }
-        },
-        child: Text(DateFormat("yyyy-MM-dd").format(date)),
-      )),
+                if (selectedDate != null) {
+                  setState(() {
+                    date = selectedDate;
+                  });
+                }
+              },
+              child: const Text("non-customized"),
+            ), //non-customized
+            ElevatedButton(
+              onPressed: () async {
+                DateTime? selectedDate = await showMarkedDatePicker(
+                  context: context,
+                  initialDate: date,
+                  lastDate: now,
+                  firstDate: DateTime(2019),
+                  markedDates: markedDates,
+                  markedDatesListenable: markedDatesNotifier,
+                  updateMonthCallback: (year, month) {
+                    markedDatesNotifier.value = _getMarkedList(year, month);
+                  },
+                  marking: Container(
+                    color: Colors.lightGreen[100],
+                    child: const Icon(Icons.check, color: Colors.white),
+                  ),
+                  todayColor: Colors.red,
+                  markedColor: Colors.yellow,
+                  selectedDayColor: Colors.green,
+                  selectedDayBackground: Colors.black,
+                );
+
+                if (selectedDate != null) {
+                  setState(() {
+                    date = selectedDate;
+                  });
+                }
+              },
+              child: const Text("Customized"),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

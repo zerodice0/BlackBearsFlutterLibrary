@@ -28,6 +28,7 @@ dependencies:
     path: ./lib/library/shared_preferences_helper
   daum_postcode_search:
     path: ./lib/library/daum_postcode_search
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

@@ -101,7 +101,8 @@ class _DaumPostcodeSearchExampleState extends State<DaumPostcodeSearchExample> {
                                 WidgetSpan(
                                   child: Icon(
                                     Icons.check_circle,
-                                    color: Theme.of(context).accentColor,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
                                   ),
                                 ),
                                 TextSpan(text: "주소 검색 결과"),

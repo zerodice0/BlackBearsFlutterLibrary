@@ -1,7 +1,7 @@
 name: marked_date_picker
-description: A new Flutter package project.
-version: 0.0.1
-homepage:
+description: Customized DatePicker for displaying marked date.
+version: 0.0.2
+repository: https://github.com/zerodice0/BlackBearsFlutterLibrary/tree/main/lib/library/marked_date_picker
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

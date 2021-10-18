@@ -1,39 +1,33 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
-
+Customized DatePicker for displaying marked dates.
 ## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+This is minor-copy of showDatePicker. but maybe you need this if you want marking dates on datepicker.
 
 ## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
+1. import 'package:marked_date_picker/marked_date_picker.dart';
+2. call `showMarkedDatePicker`.
 ## Usage
+```
+ValueNotifier<List<DateTime>> markedDatesNotifier = ValueNotifier<List<DateTime>>(
+      _getMarkedList(date.year, date.month),
+    );
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
-```dart
-const like = 'sample';
+showMarkedDatePicker(
+  context: context,
+  initialDate: date,
+  lastDate: now,
+  firstDate: DateTime(2019),
+  markedDates: markedDates,
+  markedDatesListenable: markedDatesNotifier,
+  updateMonthCallback: (year, month) {
+    markedDatesNotifier.value = DateTime.parse([
+      DateTime.parse("2021-09-02"),
+      DateTime.parse("2021-09-04"),
+      DateTime.parse("2021-09-09"),
+      DateTime.parse("2021-09-10"),
+    ]
+  },
+);
 ```
 
 ## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+- 

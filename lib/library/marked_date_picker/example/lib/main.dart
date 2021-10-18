@@ -93,7 +93,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   initialDate: date,
                   lastDate: now,
                   firstDate: DateTime(2019),
-                  markedDates: markedDates,
                   markedDatesListenable: markedDatesNotifier,
                   updateMonthCallback: (year, month) {
                     markedDatesNotifier.value = _getMarkedList(year, month);

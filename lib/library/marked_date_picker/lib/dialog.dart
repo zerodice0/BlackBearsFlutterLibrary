@@ -234,7 +234,6 @@ Future<DateTime?> showMarkedDatePicker({
     fieldHintText: fieldHintText,
     fieldLabelText: fieldLabelText,
     updateMonthCallback: updateMonthCallback,
-    markedDates: markedDates,
     markedDatesListenable: markedDatesListenable,
     marking: marking,
     todayColor: todayColor,
@@ -296,7 +295,6 @@ class MarkedDatePickerDialog extends StatefulWidget {
     this.fieldHintText,
     this.fieldLabelText,
     this.restorationId,
-    this.markedDates = const [],
     this.markedDatesListenable,
     this.updateMonthCallback,
     this.marking,
@@ -337,7 +335,6 @@ class MarkedDatePickerDialog extends StatefulWidget {
   final UpdateMonthCallback? updateMonthCallback;
 
   /// The initially marked [DateTime] that the picker display.
-  final List<DateTime> markedDates;
   final ValueListenable<List<DateTime>>? markedDatesListenable;
 
   /// The initially selected [DateTime] that the picker should display.
@@ -556,7 +553,7 @@ class _MarkedDatePickerDialogState extends State<MarkedDatePickerDialog>
         selectableDayPredicate: widget.selectableDayPredicate,
         initialCalendarMode: widget.initialCalendarMode,
         updateMonthCallback: widget.updateMonthCallback,
-        markedDates: widget.markedDates,
+        markedDates: widget.markedDatesListenable?.value ?? [],
         markedDatesListenable: widget.markedDatesListenable,
         marking: widget.marking,
         todayColor: widget.todayColor,

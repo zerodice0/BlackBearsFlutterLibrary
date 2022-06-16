@@ -195,6 +195,7 @@ Future<DateTime?> showMarkedDatePicker({
   Color? markedColor,
   Color? selectedDayColor,
   Color? selectedDayBackground,
+  Offset? anchorPoint,
 }) async {
   initialDate = DateUtils.dateOnly(initialDate);
   firstDate = DateUtils.dateOnly(firstDate);
@@ -264,6 +265,7 @@ Future<DateTime?> showMarkedDatePicker({
     builder: (BuildContext context) {
       return builder == null ? dialog : builder(context, dialog);
     },
+    anchorPoint: anchorPoint,
   );
 }
 

@@ -3,11 +3,11 @@
 [README-KR](https://github.com/zerodice0/BlackBearsFlutterLibrary/blob/main/lib/library/daum_postcode_search/README.KR.md)
 
 # DAUM Postcode Search Package
-This package is for using the [DAUM postcode service] (https://postcode.map.daum.net/guide) in Flutter. Using InAppWebView, the internal server is operated using the HTML file included in the package, and through this, the [DAUM postcode service] (https://postcode.map.daum.net/guide) is used to search for a domestic address.
+This package is for using the [DAUM postcode service] (https://postcode.map.daum.net/guide) in Flutter. Using InAppWebView, the internal server is operated using the HTML file included in the package, and through this, the [DAUM postcode service](https://postcode.map.daum.net/guide) is used to search for a domestic address.
 
 ## Setup
 #### Android
-Add `android:usesCleartextTraffic="true"` to your `<application>` in AndroidManifest.xml. Clear text traffic-related errors occur if you do not set permissions because some items in [DAUM postcode service] (https://postcode.map.daum.net/guide) do not use SSL.
+Add `android:usesCleartextTraffic="true"` to your `<application>` in AndroidManifest.xml. Clear text traffic-related errors occur if you do not set permissions because some items in [DAUM postcode service](https://postcode.map.daum.net/guide) do not use SSL.
 
 ## Example
 Below is an example of implementing a search page using the Daum Postcode Search package.

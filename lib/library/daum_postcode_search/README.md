@@ -3,7 +3,7 @@
 [README-KR](https://github.com/zerodice0/BlackBearsFlutterLibrary/blob/main/lib/library/daum_postcode_search/README.KR.md)
 
 # DAUM Postcode Search Package
-This package is for using the [DAUM postcode service] (https://postcode.map.daum.net/guide) in Flutter. Using InAppWebView, the internal server is operated using the HTML file included in the package, and through this, the [DAUM postcode service](https://postcode.map.daum.net/guide) is used to search for a domestic address.
+This package is for using the [DAUM postcode service](https://postcode.map.daum.net/guide) in Flutter. Using InAppWebView, the internal server is operated using the HTML file included in the package, and through this, the [DAUM postcode service](https://postcode.map.daum.net/guide) is used to search for a domestic address.
 
 ## Setup
 #### Android

@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.blackbear_flutter_library">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
    <application
         android:label="blackbear_flutter_library"
         android:icon="@mipmap/ic_launcher">

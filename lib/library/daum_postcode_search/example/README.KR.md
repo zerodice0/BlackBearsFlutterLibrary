@@ -8,6 +8,17 @@
 ## 설정
 #### Android
 AndroidManifest.xml의 application에 `android:usesCleartextTraffic="true"`을 추가해주세요. [DAUM 우편번호 서비스](https://postcode.map.daum.net/guide) 내의 일부 항목이 SSL을 사용하지 않아서인지, 권한을 설정해주지 않으면 Clear text traffic 관련 에러가 발생합니다.
+#### iOS
+Network 사용권한이 필요하므로 Info.plist에 아래의 내용을 추가해주세요. 추가하지 않을 경우에는 하얀 화면만 뜨게 됩니다.
+```
+<key>NSAppTransportSecurity</key>
+<dict>
+  <key>NSAllowsArbitraryLoads</key><true/>
+</dict>
+```
+
+## 마이그레이션 (0.0.1 -> 0.0.2)
+InAppWebView의 버전이 6.X로 업데이트되면서, onLoadError와 onLoadHttpError가 deprecated되었습니다. 대신 onReceivedError를 사용해주세요.
 
 ## 예제
 아래는 Daum Postcode Search 패키지를 사용해서 검색 페이지를 구현한 예제엡니다.
@@ -25,20 +36,14 @@ class _SearchingPageState extends State<SearchingPage> {
   Widget build(BuildContext context) {
     DaumPostcodeSearch daumPostcodeSearch = DaumPostcodeSearch(
       onConsoleMessage: (_, message) => print(message),
-      onLoadError: (controller, uri, errorCode, message) => setState(
+      onReceivedError: (controller, request, error) => setState(
         () {
           _isError = true;
-          errorMessage = message;
-        },
-      ),
-      onLoadHttpError: (controller, uri, errorCode, message) => setState(
-        () {
-          _isError = true;
-          errorMessage = message;
+          errorMessage = error.description;
         },
       ),
     );
-
+    
     return Scaffold(
       appBar: AppBar(
         title: Text("주소 검색 페이지입니다."),

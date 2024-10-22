@@ -75,6 +75,10 @@ class _DaumPostcodeSearchState extends State<DaumPostcodeSearch> {
               mediaPlaybackRequiresUserGesture: false,
               useHybridComposition: true,
               allowsInlineMediaPlayback: true,
+              javaScriptCanOpenWindowsAutomatically: true,
+              javaScriptEnabled: true,
+              clearCache: true,
+              networkAvailable: true,
             ),
         onWebViewCreated: (InAppWebViewController webViewController) async {
           webViewController.addJavaScriptHandler(

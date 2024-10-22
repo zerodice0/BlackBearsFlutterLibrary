@@ -1,6 +1,6 @@
 name: daum_postcode_search
 description: This package is for using the [DAUM postcode service] (https://postcode.map.daum.net/guide) in Flutter. Using InAppWebView, the internal server is operated using the HTML file included in the package, and through this, the [DAUM postcode service] (https://postcode.map.daum.net/guide) is used to search for a domestic address.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/zerodice0/BlackBearsFlutterLibrary/tree/main/lib/library/daum_postcode_search
 
 environment:
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_inappwebview: ^5.3.2
+  flutter_inappwebview: ^6.1.5
 
 dev_dependencies:
   flutter_test:

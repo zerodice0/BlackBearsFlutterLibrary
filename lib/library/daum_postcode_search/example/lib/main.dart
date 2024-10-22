@@ -170,16 +170,10 @@ class _SearchingPageState extends State<SearchingPage> {
   Widget build(BuildContext context) {
     DaumPostcodeSearch daumPostcodeSearch = DaumPostcodeSearch(
       onConsoleMessage: (_, message) => print(message),
-      onLoadError: (controller, uri, errorCode, message) => setState(
+      onReceivedError: (controller, request, error) => setState(
         () {
           _isError = true;
-          errorMessage = message;
-        },
-      ),
-      onLoadHttpError: (controller, uri, errorCode, message) => setState(
-        () {
-          _isError = true;
-          errorMessage = message;
+          errorMessage = error.description;
         },
       ),
     );

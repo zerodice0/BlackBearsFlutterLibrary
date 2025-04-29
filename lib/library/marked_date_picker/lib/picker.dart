@@ -9,7 +9,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 import 'types.dart';
 
@@ -396,7 +395,7 @@ class _DatePickerModeToggleButtonState
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
-    final Color controlColor = colorScheme.onSurface.withOpacity(0.60);
+    final Color controlColor = colorScheme.onSurface.withValues(alpha: 0.60);
 
     return Container(
       padding: const EdgeInsetsDirectional.only(start: 16, end: 4),
@@ -420,7 +419,7 @@ class _DatePickerModeToggleButtonState
                           child: Text(
                             widget.title,
                             overflow: TextOverflow.ellipsis,
-                            style: textTheme.subtitle2?.copyWith(
+                            style: textTheme.labelMedium?.copyWith(
                               color: controlColor,
                             ),
                           ),
@@ -581,7 +580,7 @@ class _MonthPickerState extends State<_MonthPicker> {
     if (widget.initialMonth != oldWidget.initialMonth &&
         widget.initialMonth != _currentMonth) {
       // We can't interrupt this widget build with a scroll, so do it next frame
-      WidgetsBinding.instance!.addPostFrameCallback(
+      WidgetsBinding.instance.addPostFrameCallback(
         (Duration timeStamp) => _showMonth(widget.initialMonth, jump: true),
       );
     }
@@ -819,7 +818,7 @@ class _MonthPickerState extends State<_MonthPicker> {
     final String nextTooltipText =
         '${_localizations.nextMonthTooltip} ${_localizations.formatMonthYear(_nextMonthDate)}';
     final Color controlColor =
-        Theme.of(context).colorScheme.onSurface.withOpacity(0.60);
+        Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.60);
     return Semantics(
       child: Column(
         children: <Widget>[
@@ -936,7 +935,6 @@ class _DayPicker extends StatefulWidget {
     this.markedColor,
     this.selectedDayColor,
     this.selectedDayBackground,
-    this.markedDateShape = BoxShape.rectangle,
     this.marking,
   })  : assert(!firstDate.isAfter(lastDate)),
         assert(!selectedDate.isBefore(firstDate)),
@@ -953,7 +951,6 @@ class _DayPicker extends StatefulWidget {
 
   /// This date is highlighted in the picker.
   final List<DateTime> markedDates;
-  final BoxShape markedDateShape;
   final Widget? marking;
 
   /// This date is highlighted in the picker.
@@ -1057,12 +1054,13 @@ class _DayPickerState extends State<_DayPicker> {
     final MaterialLocalizations localizations =
         MaterialLocalizations.of(context);
     final TextTheme textTheme = Theme.of(context).textTheme;
-    final TextStyle? headerStyle = textTheme.caption?.apply(
-      color: colorScheme.onSurface.withOpacity(0.60),
+    final TextStyle? headerStyle = textTheme.labelMedium?.apply(
+      color: colorScheme.onSurface.withValues(alpha: 0.60),
     );
-    final TextStyle dayStyle = textTheme.caption!;
-    final Color enabledDayColor = colorScheme.onSurface.withOpacity(0.87);
-    final Color disabledDayColor = colorScheme.onSurface.withOpacity(0.38);
+    final TextStyle dayStyle = textTheme.labelMedium!;
+    final Color enabledDayColor = colorScheme.onSurface.withValues(alpha: 0.87);
+    final Color disabledDayColor =
+        colorScheme.onSurface.withValues(alpha: 0.38);
     final Color selectedDayColor =
         widget.selectedDayColor ?? colorScheme.onPrimary;
     final Color selectedDayBackground =
@@ -1137,7 +1135,7 @@ class _DayPickerState extends State<_DayPicker> {
             focusNode: _dayFocusNodes[day - 1],
             onTap: () => widget.onChanged(dayToBuild),
             radius: _dayPickerRowHeight / 2 + 4,
-            splashColor: selectedDayBackground.withOpacity(0.38),
+            splashColor: selectedDayBackground.withValues(alpha: 0.38),
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -1320,13 +1318,13 @@ class _YearPickerState extends State<YearPicker> {
     if (isSelected) {
       textColor = colorScheme.onPrimary;
     } else if (isDisabled) {
-      textColor = colorScheme.onSurface.withOpacity(0.38);
+      textColor = colorScheme.onSurface.withValues(alpha: 0.38);
     } else if (isCurrentYear) {
       textColor = colorScheme.primary;
     } else {
-      textColor = colorScheme.onSurface.withOpacity(0.87);
+      textColor = colorScheme.onSurface.withValues(alpha: 0.87);
     }
-    final TextStyle? itemStyle = textTheme.bodyText1?.apply(color: textColor);
+    final TextStyle? itemStyle = textTheme.labelMedium?.apply(color: textColor);
 
     BoxDecoration? decoration;
     if (isSelected) {

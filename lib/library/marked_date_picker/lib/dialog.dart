@@ -522,8 +522,8 @@ class _MarkedDatePickerDialogState extends State<MarkedDatePickerDialog>
         ? colorScheme.onPrimary
         : colorScheme.onSurface;
     final TextStyle? dateStyle = orientation == Orientation.landscape
-        ? textTheme.headline5?.copyWith(color: onPrimarySurface)
-        : textTheme.headline4?.copyWith(color: onPrimarySurface);
+        ? textTheme.titleLarge?.copyWith(color: onPrimarySurface)
+        : textTheme.titleMedium?.copyWith(color: onPrimarySurface);
 
     final Widget actions = Container(
       alignment: AlignmentDirectional.centerEnd,
@@ -739,7 +739,6 @@ class _DatePickerHeader extends StatelessWidget {
     Key? key,
     required this.helpText,
     required this.titleText,
-    this.titleSemanticsLabel,
     required this.titleStyle,
     required this.orientation,
     this.isShort = false,
@@ -757,9 +756,6 @@ class _DatePickerHeader extends StatelessWidget {
 
   /// The text that is displayed at the center of the header.
   final String titleText;
-
-  /// The semantic label associated with the [titleText].
-  final String? titleSemanticsLabel;
 
   /// The [TextStyle] that the title text is displayed with.
   final TextStyle? titleStyle;
@@ -792,7 +788,7 @@ class _DatePickerHeader extends StatelessWidget {
     final Color onPrimarySurfaceColor =
         isDark ? colorScheme.onSurface : colorScheme.onPrimary;
 
-    final TextStyle? helpStyle = textTheme.overline?.copyWith(
+    final TextStyle? helpStyle = textTheme.labelSmall?.copyWith(
       color: onPrimarySurfaceColor,
     );
 
@@ -804,7 +800,6 @@ class _DatePickerHeader extends StatelessWidget {
     );
     final Text title = Text(
       titleText,
-      semanticsLabel: titleSemanticsLabel ?? titleText,
       style: titleStyle,
       maxLines: orientation == Orientation.portrait ? 1 : 2,
       overflow: TextOverflow.ellipsis,

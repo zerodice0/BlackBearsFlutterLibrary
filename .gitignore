@@ -44,3 +44,8 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+lib/library/daum_postcode_search/example/android/app/.cxx/*
+lib/library/daum_postcode_search/example/macos/DerivedData/Runner/Logs/*
+.vscode
+lib/library/daum_postcode_search/example/macos/Flutter/GeneratedPluginRegistrant.swift

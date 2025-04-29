@@ -47,5 +47,8 @@ app.*.map.json
 
 lib/library/daum_postcode_search/example/android/app/.cxx/*
 lib/library/daum_postcode_search/example/macos/DerivedData/Runner/Logs/*
+lib/library/marked_date_picker/example/android/app/.cxx/*
+lib/library/marked_date_picker/example/macos/DerivedData/Runner/Logs/*
 .vscode
 lib/library/daum_postcode_search/example/macos/Flutter/GeneratedPluginRegistrant.swift
+lib/library/marked_date_picker/example/macos/Flutter/GeneratedPluginRegistrant.swift

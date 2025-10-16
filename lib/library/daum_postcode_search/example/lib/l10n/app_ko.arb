@@ -1,0 +1,23 @@
+{
+  "@@locale": "ko",
+  "appTitle": "Daum Postcode Search Example",
+  "webviewSelection": "WebView 라이브러리 선택",
+  "webviewFlutterButtonLabel": "webview_flutter로 검색",
+  "webviewFlutterDescription": "Flutter 공식 WebView 플러그인",
+  "inappWebviewButtonLabel": "flutter_inappwebview로 검색",
+  "inappWebviewDescription": "고급 기능을 제공하는 서드파티 WebView",
+  "searchResults": "주소 검색 결과",
+  "koreanAddress": "한글주소",
+  "englishAddress": "영문주소",
+  "zipcode": "우편번호",
+  "jibunAddress": "지번주소",
+  "jibunAddressEnglish": "지번주소(영문)",
+  "searchButtonLabel": "주소 검색",
+  "parsingError": "데이터 파싱 오류: {error}",
+  "errorOccurred": "오류가 발생했습니다",
+  "retry": "다시 시도",
+  "searchPageTitle": "주소 검색",
+  "searchPageTitleWebViewFlutter": "주소 검색 (webview_flutter)",
+  "searchPageTitleInAppWebView": "주소 검색 (flutter_inappwebview)",
+  "refresh": "Refresh"
+}

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__serena__list_dir",
+      "Read(//Users/zerodice0/workspace/zerodice0/development/BlackBearsFlutterLibrary/lib/library/**)",
+      "mcp__dart__analyze_files"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

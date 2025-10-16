@@ -3,219 +3,254 @@
 [README-KR](https://github.com/zerodice0/BlackBearsFlutterLibrary/blob/main/lib/library/daum_postcode_search/README.KR.md)
 
 # DAUM Postcode Search Package
-This package is for using the [DAUM postcode service](https://postcode.map.daum.net/guide) in Flutter. Using InAppWebView, the internal server is operated using the HTML file included in the package, and through this, the [DAUM postcode service](https://postcode.map.daum.net/guide) is used to search for a domestic address.
+
+**Zero-dependency** Flutter package for integrating [DAUM Postcode Service](https://postcode.map.daum.net/guide). Provides local HTTP server and HTML assets - you choose your own WebView implementation (webview_flutter, flutter_inappwebview, or any other).
+
+## Features
+
+- **🎯 Zero dependencies**: No forced WebView package
+- **📦 Lightweight**: ~50KB (98.5% smaller than v0.0.4)
+- **🔧 Flexible**: Compatible with any WebView package
+- **🌐 Multiple callback methods**: URL Scheme, PostMessage, JS Handler, JS Channel
+- **🚀 Simple API**: Local server + HTML assets + callback parser
+
+## Installation
+
+```yaml
+dependencies:
+  daum_postcode_search: ^1.0.0
+
+  # Choose your WebView implementation:
+  webview_flutter: ^4.8.0  # Option 1: Official Flutter WebView
+  # OR
+  flutter_inappwebview: ^6.1.5  # Option 2: Advanced features
+```
 
 ## Setup
-#### Android
+
+### Android
+
 Add `android:usesCleartextTraffic="true"` to your `<application>` in AndroidManifest.xml. Clear text traffic-related errors occur if you do not set permissions because some items in [DAUM postcode service](https://postcode.map.daum.net/guide) do not use SSL.
 
+```xml
+<application
+    android:usesCleartextTraffic="true"
+    ...>
+</application>
+```
+
+### iOS
+
+Add the following to your Info.plist to allow network access. Without this, you will only see a white screen.
+
+```xml
+<key>NSAppTransportSecurity</key>
+<dict>
+  <key>NSAllowsArbitraryLoads</key><true/>
+</dict>
+```
+
+## Migration from 0.0.4 to 1.0.0
+
+### ⚠️ BREAKING CHANGES
+
+Version 1.0.0 is a complete rewrite that removes `flutter_inappwebview` dependency. You now implement your own WebView integration.
+
+### What Changed
+
+**Removed:**
+- ❌ `DaumPostcodeSearch` widget
+- ❌ All WebView callbacks (`onConsoleMessage`, `onReceivedError`, etc.)
+- ❌ `flutter_inappwebview` dependency (~3-4MB)
+
+**Added:**
+- ✅ `DaumPostcodeLocalServer` - Local HTTP server
+- ✅ `DaumPostcodeCallbackParser` - Parse address data
+- ✅ `DaumPostcodeAssets` - HTML file path constants
+- ✅ 4 HTML versions with different callback mechanisms
+
+### How to Migrate
+
+#### Step 1: Update Dependencies
+
+**Before (0.0.4):**
+```yaml
+dependencies:
+  daum_postcode_search: ^0.0.4
+```
+
+**After (1.0.0):**
+```yaml
+dependencies:
+  daum_postcode_search: ^1.0.0
+  webview_flutter: ^4.8.0  # Add your chosen WebView
+```
+
+#### Step 2: Replace Widget
+
+**Before (0.0.4):**
+```dart
+DaumPostcodeSearch(  // ❌ This widget no longer exists
+  onConsoleMessage: (_, message) => print(message),
+  onReceivedError: (controller, request, error) => setState(...),
+)
+```
+
+**After (1.0.0) - Basic Pattern:**
+```dart
+import 'package:daum_postcode_search/daum_postcode_search.dart';
+
+// 1. Create and start server
+final server = DaumPostcodeLocalServer();
+await server.start();
+
+// 2. Load HTML in your WebView
+final url = '${server.url}/${DaumPostcodeAssets.postMessage}';
+
+// 3. Handle callback and parse data
+final result = DaumPostcodeCallbackParser.fromPostMessage(data);
+if (result != null) {
+  print('Address: ${result.address}');
+  print('Zipcode: ${result.zonecode}');
+}
+
+// 4. Stop server when done
+await server.stop();
+```
+
+For complete implementation examples, see:
+- **webview_flutter**: [example/lib/postcode_search_webview_flutter.dart](./example/lib/postcode_search_webview_flutter.dart)
+- **flutter_inappwebview**: [example/lib/postcode_search_inappwebview.dart](./example/lib/postcode_search_inappwebview.dart)
+
+### Why This Change?
+
+**Benefits of 1.0.0:**
+- ✅ **Freedom**: Choose any WebView package or switch freely
+- ✅ **Smaller**: 98.5% size reduction (3-4MB → 50KB)
+- ✅ **Flexibility**: Full control over WebView configuration
+- ✅ **Future-proof**: Not locked into specific package versions
+- ✅ **Modern**: Clean separation of concerns
+
+**Migration effort:** ~15-30 minutes for typical integration
+
+## Quick Start
+
+### 1. Start Local Server
+
+```dart
+import 'package:daum_postcode_search/daum_postcode_search.dart';
+
+final server = DaumPostcodeLocalServer();
+await server.start();  // Defaults: localhost:8080
+print(server.url);     // http://localhost:8080
+```
+
+### 2. Choose HTML Version
+
+```dart
+// Four callback mechanisms available:
+DaumPostcodeAssets.urlScheme    // URL Scheme callback
+DaumPostcodeAssets.postMessage  // PostMessage (for webview_flutter)
+DaumPostcodeAssets.jsHandler    // JS Handler (for flutter_inappwebview)
+DaumPostcodeAssets.jsChannel    // JS Channel
+```
+
+### 3. Integrate with Your WebView
+
+**Option A: webview_flutter**
+```dart
+WebViewController()
+  ..addJavaScriptChannel('DaumPostcodeChannel',
+    onMessageReceived: (message) {
+      final result = DaumPostcodeCallbackParser.fromPostMessage(message.message);
+      // Use result...
+    })
+  ..loadRequest(Uri.parse('${server.url}/${DaumPostcodeAssets.postMessage}'));
+```
+
+**Option B: flutter_inappwebview**
+```dart
+InAppWebView(
+  initialUrlRequest: URLRequest(
+    url: WebUri('${server.url}/${DaumPostcodeAssets.jsHandler}')
+  ),
+  onWebViewCreated: (controller) {
+    controller.addJavaScriptHandler(
+      handlerName: 'handleAddressData',
+      callback: (args) {
+        final result = DaumPostcodeCallbackParser.fromJsHandler(args[0]);
+        // Use result...
+      },
+    );
+  },
+)
+```
+
+**Complete examples**: See [example](./example) directory
+
+## API Reference
+
+### DaumPostcodeLocalServer
+
+```dart
+// Create and configure
+final server = DaumPostcodeLocalServer(
+  address: 'localhost',  // Default
+  port: 8080,           // Default
+);
+
+// Lifecycle
+await server.start();
+bool isRunning = server.isRunning;
+String url = server.url;
+await server.stop();
+```
+
+### DaumPostcodeCallbackParser
+
+```dart
+// Parse from different callback types
+DataModel? result = DaumPostcodeCallbackParser.fromPostMessage(json);
+DataModel? result = DaumPostcodeCallbackParser.fromJsHandler(data);
+DataModel? result = DaumPostcodeCallbackParser.fromUrlScheme(url);
+```
+
+### DaumPostcodeAssets
+
+```dart
+// HTML file paths (use with server.url)
+DaumPostcodeAssets.urlScheme    // URL Scheme version
+DaumPostcodeAssets.postMessage  // PostMessage version (recommended for webview_flutter)
+DaumPostcodeAssets.jsHandler    // JS Handler version (recommended for flutter_inappwebview)
+DaumPostcodeAssets.jsChannel    // JS Channel version
+```
+
+### DataModel Fields
+
+All fields from [DAUM Postcode API](https://postcode.map.daum.net/guide):
+- `address`, `addressEnglish` - Full address
+- `zonecode` - 5-digit postal code
+- `roadAddress`, `roadAddressEnglish` - Road name address
+- `jibunAddress`, `jibunAddressEnglish` - Land-lot address
+- [See full list](./lib/src/data_model.dart)
+
 ## Example
-Below is an example of implementing a search page using the Daum Postcode Search package.
+
+The [example app](./example) demonstrates:
+- ✅ Dual WebView support (webview_flutter + flutter_inappwebview)
+- ✅ Multi-language UI (English, Korean)
+- ✅ Complete error handling
+- ✅ Modern Material 3 design
+
+Run the example:
+```bash
+cd example
+flutter pub get
+flutter run
 ```
-class SearchingPage extends StatefulWidget {
-  @override
-  _SearchingPageState createState() => _SearchingPageState();
-}
 
-class _SearchingPageState extends State<`SearchingPage> {
-  bool _isError = false;
-  String? errorMessage;
+See [example/README.md](./example/README.md) for details.
 
-  @override
-  Widget build(BuildContext context) {
-    DaumPostcodeSearch daumPostcodeSearch = DaumPostcodeSearch(
-      onConsoleMessage: (_, message) => print(message),
-      onLoadError: (controller, uri, errorCode, message) => setState(
-        () {
-          _isError = true;
-          errorMessage = message;
-        },
-      ),
-      onLoadHttpError: (controller, uri, errorCode, message) => setState(
-        () {
-          _isError = true;
-          errorMessage = message;
-        },
-      ),
-    );
+## License
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("주소 검색 페이지입니다."),
-        centerTitle: true,
-      ),
-      body: Container(
-        child: Column(
-          children: [
-            Expanded(
-              child: daumPostcodeSearch,
-            ),
-            Visibility(
-              visible: _isError,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(errorMessage ?? ""),
-                  ElevatedButton(
-                    child: Text("Refresh"),
-                    onPressed: () {
-                      daumPostcodeSearch.controller?.reload();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-```
-You can access the Controller of InAppWebView by using the DaumPostcodeSearch object daumPostcodeSearch created as a variable in build, and by using this, when an error occurs, it is possible to process such as Refresh.
-
-In the example, when an error occurs, the status value _isError is set to true, and the refresh and error messages are output using Visibility.
-
------
-
-The example below is an example that displays the search results received using the SearchingPage written above on the screen.
-```
-class DaumPostcodeSearchExample extends StatefulWidget {
-  DaumPostcodeSearchExample({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _DaumPostcodeSearchExampleState createState() =>
-      _DaumPostcodeSearchExampleState();
-}
-
-class _DaumPostcodeSearchExampleState extends State<DaumPostcodeSearchExample> {
-  DataModel? _daumPostcodeSearchDataModel;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    TableRow _buildTableRow(String label, String value) {
-      return TableRow(
-        children: [
-          TableCell(
-            verticalAlignment: TableCellVerticalAlignment.middle,
-            child: Text(label, textAlign: TextAlign.center),
-          ),
-          TableCell(
-            child: Text(value, textAlign: TextAlign.center),
-          ),
-        ],
-      );
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              ElevatedButton.icon(
-                onPressed: () async {
-                  try {
-                    DataModel model = await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => SearchingPage(),
-                      ),
-                    );
-
-                    setState(
-                      () {
-                        _daumPostcodeSearchDataModel = model;
-                      },
-                    );
-                  } catch (error) {
-                    print(error);
-                  }
-                },
-                icon: Icon(Icons.search),
-                label: Text("주소 검색"),
-              ),
-              Visibility(
-                visible: _daumPostcodeSearchDataModel != null,
-                child: Card(
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: RichText(
-                            text: TextSpan(
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 20),
-                              children: [
-                                WidgetSpan(
-                                  child: Icon(
-                                    Icons.check_circle,
-                                    color: Theme.of(context).accentColor,
-                                  ),
-                                ),
-                                TextSpan(text: "주소 검색 결과"),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Table(
-                          border: TableBorder.symmetric(
-                              inside: BorderSide(color: Colors.grey)),
-                          columnWidths: {
-                            0: FlexColumnWidth(1),
-                            1: FlexColumnWidth(2),
-                          },
-                          children: [
-                            _buildTableRow(
-                              "한글주소",
-                              _daumPostcodeSearchDataModel?.address ?? "",
-                            ),
-                            _buildTableRow(
-                              "영문주소",
-                              _daumPostcodeSearchDataModel?.addressEnglish ??
-                                  "",
-                            ),
-                            _buildTableRow(
-                              "우편번호",
-                              _daumPostcodeSearchDataModel?.zonecode ?? "",
-                            ),
-                            _buildTableRow(
-                              "지번주소",
-                              _daumPostcodeSearchDataModel?.autoJibunAddress ??
-                                  "",
-                            ),
-                            _buildTableRow(
-                              "지번주소(영문)",
-                              _daumPostcodeSearchDataModel
-                                      ?.autoJibunAddressEnglish ??
-                                  "",
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-```
-This is a DaumPostcodeSearchExample that uses the DataModel object _daumPostcodeSearchDataModel to display the result screen. For items provided by DataModel, refer to [DataModel](https://github.com/zerodice0/BlackBearsFlutterLibrary/blob/main/lib/library/daum_postcode_search/lib/data_model.dart).
+This project is licensed under the MIT License - see the LICENSE file for details.

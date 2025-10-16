@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class DataModel {
   final String postcode;
   final String postcode1;
@@ -71,7 +73,7 @@ class DataModel {
     required this.roadnameEnglish,
   });
 
-  static fromMap(Map<String, dynamic> map) {
+  factory DataModel.fromMap(Map<String, dynamic> map) {
     return DataModel(
       postcode: map["postcode"] ?? "",
       postcode1: map["postcode1"] ?? "",
@@ -108,5 +110,9 @@ class DataModel {
       roadname: map["roadname"] ?? "",
       roadnameEnglish: map["roadnameEnglish"] ?? "",
     );
+  }
+
+  factory DataModel.fromJson(String json) {
+    return DataModel.fromMap(jsonDecode(json) as Map<String, dynamic>);
   }
 }

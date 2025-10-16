@@ -1,149 +1,287 @@
 import 'package:daum_postcode_search/daum_postcode_search.dart';
 import 'package:flutter/material.dart';
+import 'l10n/app_localizations.dart';
+import 'postcode_search_webview_flutter.dart';
+import 'postcode_search_inappwebview.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Daum Postcode Search Example',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        useMaterial3: true,
       ),
-      home: DaumPostcodeSearchExample(title: 'Daum Postcode Search Example'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localeResolutionCallback: (locale, supportedLocales) {
+        // Check if the device locale is supported
+        if (locale != null) {
+          for (var supportedLocale in supportedLocales) {
+            if (supportedLocale.languageCode == locale.languageCode) {
+              return supportedLocale; // Use the supported locale
+            }
+          }
+        }
+        // Fallback to English (first locale) for unsupported languages
+        return supportedLocales.first; // Locale('en')
+      },
+      home: const DaumPostcodeSearchExample(
+        title: 'Daum Postcode Search Example',
+      ),
     );
   }
 }
 
+enum WebViewType { webviewFlutter, inappWebview }
+
 class DaumPostcodeSearchExample extends StatefulWidget {
-  DaumPostcodeSearchExample({Key? key, required this.title}) : super(key: key);
+  const DaumPostcodeSearchExample({Key? key, required this.title})
+      : super(key: key);
 
   final String title;
 
   @override
-  _DaumPostcodeSearchExampleState createState() =>
+  State<DaumPostcodeSearchExample> createState() =>
       _DaumPostcodeSearchExampleState();
 }
 
 class _DaumPostcodeSearchExampleState extends State<DaumPostcodeSearchExample> {
   DataModel? _daumPostcodeSearchDataModel;
+  WebViewType? _lastUsedWebViewType;
 
-  @override
-  void initState() {
-    super.initState();
+  Future<void> _searchAddress(WebViewType webViewType) async {
+    try {
+      final DataModel? model = await Navigator.of(context).push<DataModel>(
+        MaterialPageRoute(
+          builder: (context) => webViewType == WebViewType.webviewFlutter
+              ? const PostcodeSearchWebViewFlutter()
+              : const PostcodeSearchInAppWebView(),
+        ),
+      );
+
+      if (model != null) {
+        setState(() {
+          _daumPostcodeSearchDataModel = model;
+          _lastUsedWebViewType = webViewType;
+        });
+      }
+    } catch (error) {
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${l10n.errorOccurred}: $error')),
+        );
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     TableRow _buildTableRow(String label, String value) {
       return TableRow(
         children: [
           TableCell(
             verticalAlignment: TableCellVerticalAlignment.middle,
-            child: Text(label, textAlign: TextAlign.center),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                label,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ),
           TableCell(
-            child: Text(value, textAlign: TextAlign.center),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                value,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+            ),
           ),
         ],
       );
+    }
+
+    String _getWebViewBadgeText() {
+      if (_lastUsedWebViewType == null) return '';
+      return _lastUsedWebViewType == WebViewType.webviewFlutter
+          ? 'webview_flutter'
+          : 'flutter_inappwebview';
+    }
+
+    Color _getWebViewBadgeColor() {
+      if (_lastUsedWebViewType == null) return Colors.grey;
+      return _lastUsedWebViewType == WebViewType.webviewFlutter
+          ? Colors.blue
+          : Colors.purple;
     }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(16),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              ElevatedButton.icon(
-                onPressed: () async {
-                  try {
-                    DataModel model = await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => SearchingPage(),
+              Card(
+                elevation: 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        l10n.webviewSelection,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                    );
-
-                    setState(
-                      () {
-                        _daumPostcodeSearchDataModel = model;
-                      },
-                    );
-                  } catch (error) {
-                    print(error);
-                  }
-                },
-                icon: Icon(Icons.search),
-                label: Text("주소 검색"),
+                      const SizedBox(height: 16),
+                      ElevatedButton.icon(
+                        onPressed: () =>
+                            _searchAddress(WebViewType.webviewFlutter),
+                        icon: const Icon(Icons.web),
+                        label: Text(l10n.webviewFlutterButtonLabel),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.all(16),
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        l10n.webviewFlutterDescription,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton.icon(
+                        onPressed: () =>
+                            _searchAddress(WebViewType.inappWebview),
+                        icon: const Icon(Icons.web_asset),
+                        label: Text(l10n.inappWebviewButtonLabel),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.all(16),
+                          backgroundColor: Colors.purple,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        l10n.inappWebviewDescription,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
               ),
+              const SizedBox(height: 20),
               Visibility(
                 visible: _daumPostcodeSearchDataModel != null,
                 child: Card(
+                  elevation: 4,
                   child: Padding(
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: RichText(
-                            text: TextSpan(
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 20),
-                              children: [
-                                WidgetSpan(
-                                  child: Icon(
-                                    Icons.check_circle,
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.check_circle, color: Colors.green),
+                            const SizedBox(width: 8),
+                            Text(
+                              l10n.searchResults,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            if (_lastUsedWebViewType != null) ...[
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: _getWebViewBadgeColor(),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  _getWebViewBadgeText(),
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                TextSpan(text: "주소 검색 결과"),
-                              ],
-                            ),
-                          ),
+                              ),
+                            ],
+                          ],
                         ),
+                        const SizedBox(height: 16),
                         Table(
-                          border: TableBorder.symmetric(
-                              inside: BorderSide(color: Colors.grey)),
-                          columnWidths: {
+                          border: TableBorder.all(color: Colors.grey.shade300),
+                          columnWidths: const {
                             0: FlexColumnWidth(1),
                             1: FlexColumnWidth(2),
                           },
                           children: [
                             _buildTableRow(
-                              "한글주소",
-                              _daumPostcodeSearchDataModel?.address ?? "",
+                              l10n.koreanAddress,
+                              _daumPostcodeSearchDataModel?.address ?? '',
                             ),
                             _buildTableRow(
-                              "영문주소",
+                              l10n.englishAddress,
                               _daumPostcodeSearchDataModel?.addressEnglish ??
-                                  "",
+                                  '',
                             ),
                             _buildTableRow(
-                              "우편번호",
-                              _daumPostcodeSearchDataModel?.zonecode ?? "",
+                              l10n.zipcode,
+                              _daumPostcodeSearchDataModel?.zonecode ?? '',
                             ),
                             _buildTableRow(
-                              "지번주소",
-                              _daumPostcodeSearchDataModel?.autoJibunAddress ??
-                                  "",
+                              l10n.jibunAddress,
+                              _daumPostcodeSearchDataModel
+                                      ?.autoJibunAddress ??
+                                  '',
                             ),
                             _buildTableRow(
-                              "지번주소(영문)",
+                              l10n.jibunAddressEnglish,
                               _daumPostcodeSearchDataModel
                                       ?.autoJibunAddressEnglish ??
-                                  "",
-                            )
+                                  '',
+                            ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -151,60 +289,6 @@ class _DaumPostcodeSearchExampleState extends State<DaumPostcodeSearchExample> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class SearchingPage extends StatefulWidget {
-  @override
-  _SearchingPageState createState() => _SearchingPageState();
-}
-
-class _SearchingPageState extends State<SearchingPage> {
-  bool _isError = false;
-  String? errorMessage;
-
-  @override
-  Widget build(BuildContext context) {
-    DaumPostcodeSearch daumPostcodeSearch = DaumPostcodeSearch(
-      onConsoleMessage: (_, message) => print(message),
-      onReceivedError: (controller, request, error) => setState(
-        () {
-          _isError = true;
-          errorMessage = error.description;
-        },
-      ),
-    );
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("주소 검색 페이지입니다."),
-        centerTitle: true,
-      ),
-      body: Container(
-        child: Column(
-          children: [
-            Expanded(
-              child: daumPostcodeSearch,
-            ),
-            Visibility(
-              visible: _isError,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(errorMessage ?? ""),
-                  ElevatedButton(
-                    child: Text("Refresh"),
-                    onPressed: () {
-                      daumPostcodeSearch.controller?.reload();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
         ),
       ),
     );

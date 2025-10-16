@@ -1,0 +1,23 @@
+{
+  "@@locale": "en",
+  "appTitle": "Daum Postcode Search Example",
+  "webviewSelection": "Select WebView Library",
+  "webviewFlutterButtonLabel": "Search with webview_flutter",
+  "webviewFlutterDescription": "Official Flutter WebView plugin",
+  "inappWebviewButtonLabel": "Search with flutter_inappwebview",
+  "inappWebviewDescription": "Third-party WebView with advanced features",
+  "searchResults": "Address Search Results",
+  "koreanAddress": "Korean Address",
+  "englishAddress": "English Address",
+  "zipcode": "Zipcode",
+  "jibunAddress": "Jibun Address",
+  "jibunAddressEnglish": "Jibun Address (English)",
+  "searchButtonLabel": "Search Address",
+  "parsingError": "Data parsing error: {error}",
+  "errorOccurred": "An error occurred",
+  "retry": "Retry",
+  "searchPageTitle": "Address Search",
+  "searchPageTitleWebViewFlutter": "Address Search (webview_flutter)",
+  "searchPageTitleInAppWebView": "Address Search (flutter_inappwebview)",
+  "refresh": "Refresh"
+}

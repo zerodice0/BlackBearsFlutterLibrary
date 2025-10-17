@@ -3,7 +3,9 @@
     "allow": [
       "mcp__serena__list_dir",
       "Read(//Users/zerodice0/workspace/zerodice0/development/BlackBearsFlutterLibrary/lib/library/**)",
-      "mcp__dart__analyze_files"
+      "mcp__dart__analyze_files",
+      "mcp__sequential-thinking__sequentialthinking",
+      "Read(//Users/zerodice0/workspace/zerodice0/development/BlackBearsFlutterLibrary/**)"
     ],
     "deny": [],
     "ask": []

@@ -17,11 +17,11 @@
   <div id="full-size">
   </div>
   </body>
-  <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <script src="https://t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
   <script type="text/javascript">
       const element_layer = document.getElementById('full-size');
-      daum.postcode.load(function() {
-        new daum.Postcode({
+      kakao.postcode.load(function() {
+        new kakao.Postcode({
           oncomplete: function(data) {
             window.flutter_inappwebview.callHandler('onSelectAddress', data);
           },

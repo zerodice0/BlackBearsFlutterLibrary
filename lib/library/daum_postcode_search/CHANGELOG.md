@@ -1,3 +1,12 @@
+## 1.1.0
+- Replace legacy API endpoint (t1.daumcdn.net -> t1.kakaocdn.net)
+- Update `network_security_config.xml` domain whitelist for Kakao Postcode API
+- Add `networkSecurityConfig` usage note to README
+
+## 1.0.0
+- Stable release of zero-dependency architecture
+- See 0.1.0 for full list of changes from 0.0.4
+
 ## 0.1.0 - BREAKING CHANGES
 - **Zero dependencies**: Removed `flutter_inappwebview` dependency
 - **New architecture**: Package now provides only local server and HTML assets

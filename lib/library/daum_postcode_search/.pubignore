@@ -1,0 +1,5 @@
+# Claude Code local settings
+.claude/
+
+# Example app (not needed in published package)
+example/macos/Flutter/GeneratedPluginRegistrant.swift

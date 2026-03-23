@@ -1,6 +1,6 @@
 name: daum_postcode_search
 description: Zero-dependency package providing local server and HTML assets for Daum Postcode Service in Flutter. Bring your own WebView implementation for maximum flexibility.
-version: 1.0.0
+version: 1.1.0
 homepage: https://github.com/zerodice0/BlackBearsFlutterLibrary/tree/main/lib/library/daum_postcode_search
 
 environment:

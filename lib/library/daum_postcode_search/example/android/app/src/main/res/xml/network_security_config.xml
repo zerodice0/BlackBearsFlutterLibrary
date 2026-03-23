@@ -2,9 +2,9 @@
 
 <network-security-config>
   <domain-config cleartextTrafficPermitted="true">
-    <domain includeSubdomains="true">ssl.daumcdn.net</domain>
-    <domain includeSubdomains="true">dmaps.daum.net</domain>
     <domain includeSubdomains="true">localhost</domain>
-    <domain includeSubdomains="true">postcode.map.daum.net</domain>
+    <domain includeSubdomains="true">kakaocdn.net</domain>
+    <domain includeSubdomains="true">daum.net</domain>
+    <domain includeSubdomains="true">kakao.com</domain>
   </domain-config>
 </network-security-config>

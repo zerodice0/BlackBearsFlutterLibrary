@@ -39,6 +39,20 @@ Add `android:usesCleartextTraffic="true"` to your `<application>` in AndroidMani
 </application>
 ```
 
+> **Note:** If your app uses `android:networkSecurityConfig`, the `usesCleartextTraffic` attribute is ignored. In that case, add the following domains to your `network_security_config.xml`:
+>
+> ```xml
+> <?xml version="1.0" encoding="utf-8"?>
+> <network-security-config>
+>   <domain-config cleartextTrafficPermitted="true">
+>     <domain includeSubdomains="true">localhost</domain>
+>     <domain includeSubdomains="true">kakaocdn.net</domain>
+>     <domain includeSubdomains="true">daum.net</domain>
+>     <domain includeSubdomains="true">kakao.com</domain>
+>   </domain-config>
+> </network-security-config>
+> ```
+
 ### iOS
 
 Add the following to your Info.plist to allow network access. Without this, you will only see a white screen.

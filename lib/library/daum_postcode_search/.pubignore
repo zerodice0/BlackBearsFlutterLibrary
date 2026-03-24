@@ -1,5 +1,30 @@
 # Claude Code local settings
 .claude/
+AGENTS.md
 
-# Example app (not needed in published package)
+# OMC
+.omc/
+
+# IDE
+.vscode/
+.idea/
+
+# Example app build artifacts
+example/android/
+example/ios/
+example/build/
+example/.dart_tool/
 example/macos/Flutter/GeneratedPluginRegistrant.swift
+example/macos/DerivedData/
+
+# Build / generated
+.dart_tool/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.metadata
+pubspec.lock
+
+# OS
+.DS_Store

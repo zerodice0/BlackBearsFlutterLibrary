@@ -16,7 +16,7 @@
 
 ```yaml
 dependencies:
-  daum_postcode_search: ^1.0.0
+  daum_postcode_search: ^1.1.0
 
   # WebView 구현 선택:
   webview_flutter: ^4.8.0  # 옵션 1: 공식 Flutter WebView
@@ -91,10 +91,10 @@ dependencies:
   daum_postcode_search: ^0.0.4
 ```
 
-**이후 (1.0.0):**
+**이후 (1.1.0):**
 ```yaml
 dependencies:
-  daum_postcode_search: ^1.0.0
+  daum_postcode_search: ^1.1.0
   webview_flutter: ^4.8.0  # 선택한 WebView 추가
 ```
 

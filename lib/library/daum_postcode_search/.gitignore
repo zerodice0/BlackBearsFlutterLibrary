@@ -74,5 +74,5 @@ build/
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
 
-.claude/settings.local.json
+.claude/
 example/macos/Flutter/GeneratedPluginRegistrant.swift
